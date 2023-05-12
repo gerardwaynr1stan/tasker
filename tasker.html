@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>tasker</title>
+  <style>
+    /* Add some basic styles here */
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1tasker</h1>
+
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button onclick="addTask()">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    // Define an array to store tasks
+    var tasks = [];
+
+    // Function to add a new task
+    function addTask() {
+      var input = document.getElementById("taskInput");
+      var task = input.value.trim();
+      
+      if (task !== "") {
+        tasks.push(task);
+        input.value = "";
+        displayTasks();
+      }
+    }
+
+    // Function to display tasks
+    function displayTasks() {
+      var taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+
+      for (var i = 0; i < tasks.length; i++) {
+        var taskItem = document.createElement("li");
+        taskItem.textContent = tasks[i];
+        taskList.appendChild(taskItem);
+      }
+    }
+  </script>
+</body>
+</html>
