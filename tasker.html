@@ -6,6 +6,14 @@
     /* Add some basic styles here */
     body {
       font-family: Arial, sans-serif;
+ background-color: lightblue;
+    }
+    button {
+      background-color: lightpink;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: dot;
     }
   </style>
 </head>
@@ -13,6 +21,12 @@
   <h1tasker</h1>
 
   <input type="text" id="taskInput" placeholder="Enter a task">
+  <select id="taskStatus">
+  <option value="working">Working on it</option>
+  <option value="stuck">Stuck</option>
+  <option value="done">Done</option>
+</select>
+<button onclick="addTask()">Add Task</button>
   <button onclick="addTask()">Add Task</button>
 
   <ul id="taskList"></ul>
@@ -25,13 +39,79 @@
     function addTask() {
       var input = document.getElementById("taskInput");
       var task = input.value.trim();
+      var taskStatus = document.getElementById("taskStatus").value;
       
-      if (task !== "") {
-        tasks.push(task);
-        input.value = "";
-        displayTasks();
-      }
+         
+    if (task !== "") {
+      tasks.push({ task: task, status: taskStatus });
+      input.value = "";
+      displayTasks();
+<ul id="taskList"></ul>
+
+<script>
+  // ...
+
+  function addSubtask(event) {
+    var parentTaskId = event.target.dataset.parentId;
+    var subtaskInput = document.getElementById("subtaskInput_" + parentTaskId);
+    var subtask = subtaskInput.value.trim();
+    var subtaskStatus = document.getElementById("subtaskStatus_" + parentTaskId).value;
+
+    if (subtask !== "") {
+      var parentTask = tasks.find(task => task.id === parentTaskId);
+      parentTask.subtasks.push({ task: subtask, status: subtaskStatus });
+      subtaskInput.value = "";
+      displayTasks();
     }
+  }
+
+  function displayTasks() {
+    var taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    for (var i = 0; i < tasks.length; i++) {
+      var taskItem = document.createElement("li");
+      taskItem.textContent = tasks[i].task + " (" + tasks[i].status + ")";
+      taskItem.innerHTML += '<ul id="subtaskList_' + tasks[i].id + '"></ul>';
+      var subtaskList = taskItem.querySelector("#subtaskList_" + tasks[i].id);
+
+      for (var j = 0; j < tasks[i].subtasks.length; j++) {
+        var subtaskItem = document.createElement("li");
+        subtaskItem.textContent = tasks[i].subtasks[j].task + " (" + tasks[i].subtasks[j].status + ")";
+        subtaskList.appendChild(subtaskItem);
+      }
+
+      var subtaskInput = document.createElement("input");
+      subtaskInput.type = "text";
+      subtaskInput.placeholder = "Enter a subtask";
+      subtaskInput.id = "subtaskInput_" + tasks[i].id;
+
+      var subtaskStatus = document.createElement("select");
+      subtaskStatus.id = "subtaskStatus_" + tasks[i].id;
+      var options = ["working", "stuck", "done"];
+      for (var k = 0; k < options.length; k++) {
+        var option = document.createElement("option");
+        option.value = options[k];
+        option.textContent = options[k].charAt(0).toUpperCase() + options[k].slice(1);
+        subtaskStatus.appendChild(option);
+      }
+
+      var addSubtaskButton = document.createElement("button");
+      addSubtaskButton.textContent = "Add Subtask";
+      addSubtaskButton.dataset.parentId = tasks[i].id;
+      addSubtaskButton.addEventListener("click", addSubtask);
+
+      taskItem.appendChild(subtaskInput);
+      taskItem.appendChild(subtaskStatus);
+      taskItem.appendChild(addSubtaskButton);
+
+      taskList.appendChild(taskItem);
+    }
+  }
+</script>
+
+    }
+  }
 
     // Function to display tasks
     function displayTasks() {
@@ -40,10 +120,27 @@
 
       for (var i = 0; i < tasks.length; i++) {
         var taskItem = document.createElement("li");
-        taskItem.textContent = tasks[i];
+        taskItem.textContent = tasks[i].task + " (" + tasks[i].status + ")";
         taskList.appendChild(taskItem);
       }
     }
+<head>
+  <title>Task Manager</title>
+  <style>
+    /* CSS styles for the page */
+  </style>
+  <script>
+
+    
+</head>
+<body>
+  <!-- Your existing HTML code -->
+
+  <!-- The modified HTML code with subtask elements -->
+
+  <ul id="taskList"></ul>
+</body>
+
   </script>
 </body>
 </html>
